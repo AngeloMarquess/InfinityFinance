@@ -31,3 +31,35 @@ ul {
   padding: 0;
   margin-top: 20px;
 }
+
+#lista li.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  background: #f5f7fa;
+}
+
+#lista li.item.receita {
+  border-left: 6px solid #16a34a;
+}
+
+#lista li.item.despesa {
+  border-left: 6px solid #dc2626;
+}
+
+#lista .info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#lista .remover {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+}
+
