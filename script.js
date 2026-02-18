@@ -67,13 +67,15 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
     grafico = new Chart(ctxGrafico, {
       type: "bar",
       data: {
-        labels: ["Receitas", "Despesas"],
+      labels: [["Receitas"], ["Despesas"]],
         datasets: [
   {
     label: "R$",
     data: dados,
- categoryPercentage: 0.6,  // espaço entre categorias
+    categoryPercentage: 0.6,  // espaço entre categorias
     barPercentage: 0.5,       // largura da barra
+    borderRadius: 6,
+
 
     backgroundColor: [
       "#16a34a", // verde receitas
@@ -100,8 +102,9 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
         scales: {
             x: {
     ticks: {
-      maxRotation: 0,
       autoSkip: false,
+      maxRotation: 0,
+      minRotation: 0,
       padding: 8
     }
   },
