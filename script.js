@@ -87,10 +87,21 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
       options: {
         responsive: true,
           maintainAspectRatio: false,
+          layout: {
+  padding: { bottom: 20 }
+},
+
         plugins: {
           legend: { display: false },
         },
         scales: {
+            x: {
+    ticks: {
+      maxRotation: 0,
+      autoSkip: false,
+      padding: 8
+    }
+  },
           y: {
             beginAtZero: true,
             ticks: {
