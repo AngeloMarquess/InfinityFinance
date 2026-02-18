@@ -69,12 +69,20 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
       data: {
         labels: ["Receitas", "Despesas"],
         datasets: [
-          {
-            label: "R$",
-            data: dados,
-            borderWidth: 1,
-          },
-        ],
+  {
+    label: "R$",
+    data: dados,
+    backgroundColor: [
+      "#16a34a", // verde receitas
+      "#dc2626"  // vermelho despesas
+    ],
+    borderColor: [
+      "#16a34a",
+      "#dc2626"
+    ],
+    borderWidth: 1,
+  },
+],
       },
       options: {
         responsive: true,
