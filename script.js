@@ -4,6 +4,9 @@ const valor = document.getElementById("valor");
 const tipo = document.getElementById("tipo");
 const lista = document.getElementById("lista");
 const saldoEl = document.getElementById("saldo");
+const totalReceitasEl = document.getElementById("totalReceitas");
+const totalDespesasEl = document.getElementById("totalDespesas");
+
 
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 
@@ -58,6 +61,18 @@ function renderizar() {
   transacoes.forEach((t) => {
     lista.appendChild(criarItem(t));
   });
+
+  const totalReceitas = transacoes
+  .filter((t) => t.tipo === "receita")
+  .reduce((acc, t) => acc + Number(t.valor), 0);
+
+const totalDespesas = transacoes
+  .filter((t) => t.tipo === "despesa")
+  .reduce((acc, t) => acc + Number(t.valor), 0);
+
+totalReceitasEl.textContent = formatarMoeda(totalReceitas);
+totalDespesasEl.textContent = formatarMoeda(totalDespesas);
+
 
   const saldo = calcularSaldo();
   saldoEl.textContent = formatarMoeda(saldo);

@@ -63,3 +63,28 @@ ul {
   font-size: 18px;
 }
 
+.resumo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.resumo .card {
+  padding: 12px;
+  border-radius: 10px;
+  background: #f5f7fa;
+}
+
+.resumo .card p {
+  margin: 0 0 6px;
+  opacity: 0.8;
+}
+
+.resumo .card strong {
+  font-size: 18px;
+}
+
+.resumo .card.receita { border-left: 6px solid #16a34a; }
+.resumo .card.despesa { border-left: 6px solid #dc2626; }
+
