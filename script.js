@@ -67,7 +67,7 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
     grafico = new Chart(ctxGrafico, {
       type: "bar",
       data: {
-     abels: ["Receitas ", " Despesas"],
+      labels: [["Receitas"], ["Despesas"]],
         datasets: [
   {
     label: "R$",
