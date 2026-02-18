@@ -160,3 +160,27 @@ ul {
 #limparTudo.danger:hover {
   background: #fee2e2;
 }
+
+
+.backup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.backup button,
+.backup .importar {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+}
+
+.backup button:hover,
+.backup .importar:hover {
+  background: #f3f4f6;
+}

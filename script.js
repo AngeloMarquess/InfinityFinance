@@ -11,6 +11,9 @@ let grafico;
 const botoesFiltro = document.querySelectorAll(".filtro");
 let filtroAtual = "todas";
 const btnLimparTudo = document.getElementById("limparTudo");
+const btnExportar = document.getElementById("exportar");
+const inputImportar = document.getElementById("importarArquivo");
+
 
 
 
@@ -131,6 +134,63 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
   }
 }
 
+function exportarBackup() {
+  const payload = {
+    app: "InfinityFinance",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    transacoes,
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json",
+  });
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  const data = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `infinityfinance-backup-${data}.json`;
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function validarBackup(obj) {
+  return (
+    obj &&
+    Array.isArray(obj.transacoes) &&
+    obj.transacoes.every(
+      (t) =>
+        typeof t.descricao === "string" &&
+        (t.tipo === "receita" || t.tipo === "despesa") &&
+        typeof t.valor === "number"
+    )
+  );
+}
+
+async function importarBackup(file) {
+  const text = await file.text();
+  const obj = JSON.parse(text);
+
+  // aceita tanto o formato novo (com wrapper) quanto uma lista pura
+  if (Array.isArray(obj)) {
+    // formato antigo: [transacoes]
+    transacoes = obj;
+  } else {
+    if (!validarBackup(obj)) {
+      alert("Arquivo inválido. Selecione um backup do InfinityFinance.");
+      return;
+    }
+    transacoes = obj.transacoes;
+  }
+
+  salvar();
+  renderizar();
+}
+
+
 function aplicarFiltro(listaTransacoes) {
   if (filtroAtual === "todas") return listaTransacoes;
   return listaTransacoes.filter((t) => t.tipo === filtroAtual);
@@ -206,6 +266,35 @@ btnLimparTudo.addEventListener("click", () => {
   salvar();
   renderizar();
 });
+
+btnExportar.addEventListener("click", () => {
+  if (transacoes.length === 0) {
+    alert("Não há transações para exportar.");
+    return;
+  }
+  exportarBackup();
+});
+
+inputImportar.addEventListener("change", async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const ok = confirm("Importar este backup vai substituir suas transações atuais. Continuar?");
+  if (!ok) {
+    e.target.value = "";
+    return;
+  }
+
+  try {
+    await importarBackup(file);
+    alert("Backup importado com sucesso!");
+  } catch {
+    alert("Não foi possível importar. Verifique se o arquivo é um JSON válido.");
+  } finally {
+    e.target.value = "";
+  }
+});
+
 
 
 renderizar();

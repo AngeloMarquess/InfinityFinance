@@ -11,7 +11,7 @@
     <h1>InfinityFinance</h1>
 
     <section class="saldo">
-      <h2>Saldo Atual</h2>
+      <h2>Saldo Atual </h2>
       <p id="saldo">R$ 0,00</p>
     </section>
 
@@ -54,6 +54,14 @@
   <button type="button" id="limparTudo" class="danger">Limpar tudo</button>
 </section>
 
+<section class="backup">
+  <button type="button" id="exportar">Exportar backup</button>
+
+  <label class="importar">
+    Importar backup
+    <input type="file" id="importarArquivo" accept="application/json" hidden />
+  </label>
+</section>
 
 
     <ul id="lista"></ul>
@@ -66,3 +74,4 @@
 
 </body>
 </html>
+
