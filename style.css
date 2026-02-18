@@ -93,9 +93,20 @@ ul {
   padding: 12px;
   border-radius: 10px;
   background: #f5f7fa;
+
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
+
 
 .grafico h2 {
   margin: 0 0 10px;
   font-size: 16px;
+}
+
+#graficoFinanceiro {
+  width: 100% !important;
+  height: auto !important;
 }
