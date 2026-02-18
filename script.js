@@ -10,6 +10,8 @@ const ctxGrafico = document.getElementById("graficoFinanceiro");
 let grafico;
 const botoesFiltro = document.querySelectorAll(".filtro");
 let filtroAtual = "todas";
+const btnLimparTudo = document.getElementById("limparTudo");
+
 
 
 
@@ -194,4 +196,17 @@ botoesFiltro.forEach((btn) => {
 });
 
 
+btnLimparTudo.addEventListener("click", () => {
+  if (transacoes.length === 0) return;
+
+  const ok = confirm("Tem certeza que deseja apagar todas as transações? Isso não pode ser desfeito.");
+  if (!ok) return;
+
+  transacoes = [];
+  salvar();
+  renderizar();
+});
+
+
 renderizar();
+

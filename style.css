@@ -139,3 +139,24 @@ ul {
   color: #fff;
   border-color: #111827;
 }
+
+.acoes {
+  margin-top: 10px;
+}
+
+#acoes, #limparTudo {
+  width: 100%;
+}
+
+#limparTudo.danger {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #fecaca;
+  background: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#limparTudo.danger:hover {
+  background: #fee2e2;
+}
