@@ -8,6 +8,8 @@ const totalReceitasEl = document.getElementById("totalReceitas");
 const totalDespesasEl = document.getElementById("totalDespesas");
 const ctxGrafico = document.getElementById("graficoFinanceiro");
 let grafico;
+const botoesFiltro = document.querySelectorAll(".filtro");
+let filtroAtual = "todas";
 
 
 
@@ -127,14 +129,18 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
   }
 }
 
+function aplicarFiltro(listaTransacoes) {
+  if (filtroAtual === "todas") return listaTransacoes;
+  return listaTransacoes.filter((t) => t.tipo === filtroAtual);
+}
 
 
 function renderizar() {
   lista.innerHTML = "";
 
-  transacoes.forEach((t) => {
-    lista.appendChild(criarItem(t));
-  });
+  aplicarFiltro(transacoes).forEach((t) => {
+  lista.appendChild(criarItem(t));
+});
 
   const totalReceitas = transacoes
   .filter((t) => t.tipo === "receita")
@@ -175,5 +181,17 @@ form.addEventListener("submit", (e) => {
   form.reset();
   descricao.focus();
 });
+
+botoesFiltro.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    filtroAtual = btn.dataset.filtro;
+
+    botoesFiltro.forEach((b) => b.classList.remove("ativo"));
+    btn.classList.add("ativo");
+
+    renderizar();
+  });
+});
+
 
 renderizar();

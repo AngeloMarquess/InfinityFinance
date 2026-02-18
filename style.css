@@ -118,3 +118,24 @@ ul {
   width: 100% !important;
   height: auto !important;
 }
+
+.filtros {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.filtros .filtro {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.filtros .filtro.ativo {
+  background: #111827;
+  color: #fff;
+  border-color: #111827;
+}
