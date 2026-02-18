@@ -88,3 +88,14 @@ ul {
 .resumo .card.receita { border-left: 6px solid #16a34a; }
 .resumo .card.despesa { border-left: 6px solid #dc2626; }
 
+.grafico {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f5f7fa;
+}
+
+.grafico h2 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}

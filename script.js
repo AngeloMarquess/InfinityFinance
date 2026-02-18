@@ -6,6 +6,9 @@ const lista = document.getElementById("lista");
 const saldoEl = document.getElementById("saldo");
 const totalReceitasEl = document.getElementById("totalReceitas");
 const totalDespesasEl = document.getElementById("totalDespesas");
+const ctxGrafico = document.getElementById("graficoFinanceiro");
+let grafico;
+
 
 
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
@@ -55,6 +58,51 @@ function criarItem(transacao) {
   return li;
 }
 
+function atualizarGrafico(totalReceitas, totalDespesas) {
+  if (!ctxGrafico) return;
+
+  const dados = [totalReceitas, totalDespesas];
+
+  if (!grafico) {
+    grafico = new Chart(ctxGrafico, {
+      type: "bar",
+      data: {
+        labels: ["Receitas", "Despesas"],
+        datasets: [
+          {
+            label: "R$",
+            data: dados,
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: (value) =>
+                value.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                }),
+            },
+          },
+        },
+      },
+    });
+  } else {
+    grafico.data.datasets[0].data = dados;
+    grafico.update();
+  }
+}
+
+
+
 function renderizar() {
   lista.innerHTML = "";
 
@@ -72,6 +120,8 @@ const totalDespesas = transacoes
 
 totalReceitasEl.textContent = formatarMoeda(totalReceitas);
 totalDespesasEl.textContent = formatarMoeda(totalDespesas);
+atualizarGrafico(totalReceitas, totalDespesas);
+
 
 
   const saldo = calcularSaldo();
