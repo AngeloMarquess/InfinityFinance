@@ -98,8 +98,14 @@ ul {
   max-width: 100%;
   overflow: hidden;
   box-sizing: border-box;
+   height: 220px;          /* <- controla a altura */
 }
 
+.grafico canvas {
+  width: 100% !important;
+  height: 100% !important; /* <- ocupa só a caixa do gráfico */
+  display: block;
+}
 
 .grafico h2 {
   margin: 0 0 10px;
