@@ -72,6 +72,9 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
   {
     label: "R$",
     data: dados,
+ categoryPercentage: 0.6,  // espaço entre categorias
+    barPercentage: 0.5,       // largura da barra
+
     backgroundColor: [
       "#16a34a", // verde receitas
       "#dc2626"  // vermelho despesas
