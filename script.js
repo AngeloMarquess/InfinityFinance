@@ -21,6 +21,9 @@ const inputImportar = document.getElementById("importarArquivo");
 
 const ctxGrafico = document.getElementById("graficoFinanceiro");
 const ctxCategoria = document.getElementById("graficoCategoria");
+const ctxPizza = document.getElementById("graficoPizza");
+
+let graficoPizza;
 
 
 // ESTADO
@@ -285,6 +288,88 @@ function atualizarGraficoCategoria(){
 }
 
 
+function atualizarGraficoPizza(){
+
+  const mapa = {};
+
+  transacoes.forEach(t=>{
+
+    mapa[t.categoria] = (mapa[t.categoria] || 0) + t.valor;
+
+  });
+
+  const labels = Object.keys(mapa);
+
+  const data = Object.values(mapa);
+
+
+  const cores = [
+
+    "#22c55e",
+    "#ef4444",
+    "#3b82f6",
+    "#f59e0b",
+    "#8b5cf6",
+    "#06b6d4",
+    "#ec4899",
+    "#84cc16"
+
+  ];
+
+
+  if(!graficoPizza){
+
+    graficoPizza = new Chart(ctxPizza,{
+
+      type:"doughnut",
+
+      data:{
+
+        labels,
+
+        datasets:[{
+
+          data,
+
+          backgroundColor:cores,
+
+          borderWidth:0
+
+        }]
+
+      },
+
+      options:{
+
+        plugins:{
+
+          legend:{
+
+            position:"bottom"
+
+          }
+
+        },
+
+        cutout:"65%"
+
+      }
+
+    });
+
+  }else{
+
+    graficoPizza.data.labels = labels;
+
+    graficoPizza.data.datasets[0].data = data;
+
+    graficoPizza.update();
+
+  }
+
+}
+
+
 // RENDER
 
 function renderizar(){
@@ -317,6 +402,8 @@ function renderizar(){
   atualizarGrafico();
 
   atualizarGraficoCategoria();
+  atualizarGraficoPizza();
+
 
 }
 
