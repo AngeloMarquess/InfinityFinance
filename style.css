@@ -206,3 +206,278 @@ ul {
   border-radius: 10px;
   background: #fff;
 }
+
+
+/* ====== Fintech UI polish (InfinityFinance) ====== */
+
+:root{
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+
+  --brand: #111827;      /* preto elegante */
+  --brand2: #4f46e5;     /* roxo/indigo */
+  --green: #16a34a;
+  --red: #dc2626;
+
+  --border: #e5e7eb;
+  --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --shadow2: 0 6px 14px rgba(15, 23, 42, 0.10);
+  --radius: 16px;
+}
+
+/* fundo geral */
+body{
+  background: radial-gradient(1200px 600px at 20% 0%, rgba(79,70,229,.10), transparent 60%),
+              radial-gradient(900px 500px at 100% 30%, rgba(22,163,74,.08), transparent 55%),
+              var(--bg);
+  color: var(--text);
+}
+
+/* container principal */
+.container{
+  background: transparent;
+}
+
+/* cards / blocos */
+.saldo, .resumo, .grafico, form, .filtros, .filtro-categoria, .categoria-nova, .categoria-gerenciar, .acoes, .backup, #lista{
+  box-sizing: border-box;
+}
+
+/* inputs e selects */
+input, select{
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,.90);
+  transition: .2s ease;
+  outline: none;
+}
+
+input:focus, select:focus{
+  border-color: rgba(79,70,229,.55);
+  box-shadow: 0 0 0 4px rgba(79,70,229,.12);
+  transform: translateY(-1px);
+}
+
+/* botões (base) */
+button{
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 12px;
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: .18s ease;
+  font-weight: 600;
+}
+
+button:hover{
+  transform: translateY(-1px);
+  box-shadow: var(--shadow2);
+}
+
+button:active{
+  transform: translateY(0px);
+  box-shadow: none;
+}
+
+/* botão principal do formulário (Adicionar) */
+form button[type="submit"]{
+  border: none;
+  background: linear-gradient(135deg, var(--brand2), #7c3aed);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(79,70,229,.25);
+}
+
+form button[type="submit"]:hover{
+  filter: brightness(1.02);
+}
+
+/* filtros (Todas/Receitas/Despesas) estilo pill */
+.filtros{
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.filtros .filtro{
+  flex: 1;
+  border-radius: 999px;
+  padding: 11px 14px;
+  background: rgba(255,255,255,.90);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.filtros .filtro.ativo{
+  background: linear-gradient(135deg, var(--brand), #0b1220);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.22);
+}
+
+/* filtro categoria */
+.filtro-categoria{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.filtro-categoria label{
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* bloco criar categoria */
+.categoria-nova{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#addCategoria{
+  border: none;
+  background: linear-gradient(135deg, rgba(79,70,229,.12), rgba(79,70,229,.22));
+  color: var(--brand2);
+}
+
+/* bloco gerenciar categoria */
+.categoria-gerenciar{
+  display: grid;
+  grid-template-columns: 1fr 1.3fr auto auto;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#btnRenomearCategoria{
+  border: none;
+  background: linear-gradient(135deg, rgba(79,70,229,.12), rgba(124,58,237,.18));
+  color: var(--brand2);
+}
+
+#btnExcluirCategoria{
+  border: 1px solid rgba(220,38,38,.30);
+  background: rgba(220,38,38,.06);
+  color: var(--red);
+}
+
+/* Limpar tudo (danger) */
+#limparTudo, .danger{
+  width: 100%;
+  border: 1px solid rgba(220,38,38,.28);
+  background: rgba(220,38,38,.04);
+  color: var(--red);
+  border-radius: 999px;
+  padding: 12px 16px;
+}
+
+#limparTudo:hover{
+  background: rgba(220,38,38,.08);
+}
+
+/* backup botões */
+.backup{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#exportar{
+  border: none;
+  background: linear-gradient(135deg, rgba(15,23,42,.08), rgba(15,23,42,.14));
+  color: var(--brand);
+}
+
+.backup .importar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(79,70,229,.45);
+  background: rgba(79,70,229,.06);
+  color: var(--brand2);
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.backup .importar:hover{
+  transform: translateY(-1px);
+  box-shadow: var(--shadow2);
+}
+
+/* lista e itens */
+#lista{
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item{
+  background: rgba(255,255,255,.92);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 10px 22px rgba(15,23,42,.06);
+}
+
+.item .info strong{
+  font-size: 16px;
+}
+
+.item .info span{
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* faixa lateral por tipo */
+.item.receita{
+  border-left: 6px solid var(--green);
+}
+.item.despesa{
+  border-left: 6px solid var(--red);
+}
+
+/* botões editar/remover do item */
+.item button{
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item button:hover{
+  box-shadow: 0 10px 18px rgba(15,23,42,.12);
+}
+
+/* títulos e subtítulos */
+h1{
+  letter-spacing: -0.5px;
+}
+
+h2{
+  letter-spacing: -0.3px;
+}
+
+/* responsivo: gerenciar categoria em 2 linhas no mobile */
+@media (max-width: 520px){
+  .categoria-gerenciar{
+    grid-template-columns: 1fr 1fr;
+  }
+  .categoria-gerenciar input{
+    grid-column: 1 / -1;
+  }
+}
