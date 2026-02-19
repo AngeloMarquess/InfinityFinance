@@ -26,6 +26,8 @@ let filtroAtual = "todas";
 let categoriaAtual = "todas";
 
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+let editandoId = null;
+
 
 // MIGRAÇÃO V8: garante categoria e garante valor numérico
 transacoes = transacoes.map((t) => ({
@@ -60,15 +62,43 @@ function removerTransacao(id) {
 }
 
 function criarItem(transacao) {
+
   const li = document.createElement("li");
   li.className = `item ${transacao.tipo}`;
 
   const info = document.createElement("div");
   info.className = "info";
+
   info.innerHTML = `
     <strong>${transacao.descricao}</strong>
     <span>${transacao.categoria} • ${formatarMoeda(transacao.valor)}</span>
   `;
+
+  // botão editar
+  const btnEditar = document.createElement("button");
+  btnEditar.textContent = "✏️";
+  btnEditar.title = "Editar";
+
+  btnEditar.addEventListener("click", () => editarTransacao(transacao.id));
+
+  // botão remover
+  const btnRemover = document.createElement("button");
+  btnRemover.textContent = "🗑";
+  btnRemover.title = "Remover";
+
+  btnRemover.addEventListener("click", () => removerTransacao(transacao.id));
+
+  const actions = document.createElement("div");
+  actions.appendChild(btnEditar);
+  actions.appendChild(btnRemover);
+
+  li.appendChild(info);
+  li.appendChild(actions);
+
+  return li;
+
+}
+
 
   const btn = document.createElement("button");
   btn.className = "remover";
@@ -156,6 +186,22 @@ function atualizarGrafico(totalReceitas, totalDespesas) {
     grafico.update();
   }
 }
+
+function editarTransacao(id){
+
+  const t = transacoes.find(t => t.id === id);
+
+  descricao.value = t.descricao;
+  valor.value = t.valor;
+  tipo.value = t.tipo;
+  categoriaEl.value = t.categoria;
+
+  editandoId = id;
+
+  descricao.focus();
+
+}
+
 
 function atualizarGraficoCategoria(listaTransacoes) {
   if (!ctxCategoria) return;
@@ -307,13 +353,49 @@ form.addEventListener("submit", (e) => {
 
   if (!desc || !Number.isFinite(val) || val <= 0) return;
 
-  const novaTransacao = {
-    id: crypto?.randomUUID?.() ?? Date.now().toString(),
-    descricao: desc,
-    valor: val,
-    tipo: tipo.value,
-    categoria: categoriaEl.value || "Outros",
-  };
+  form.addEventListener("submit", (e) => {
+
+  e.preventDefault();
+
+  const desc = descricao.value.trim();
+  const val = Number(valor.value);
+
+  if (!desc || val <= 0) return;
+
+  if(editandoId){
+
+    const t = transacoes.find(t => t.id === editandoId);
+
+    t.descricao = desc;
+    t.valor = val;
+    t.tipo = tipo.value;
+    t.categoria = categoriaEl.value;
+
+    editandoId = null;
+
+  }else{
+
+    const novaTransacao = {
+
+      id: Date.now().toString(),
+      descricao: desc,
+      valor: val,
+      tipo: tipo.value,
+      categoria: categoriaEl.value
+
+    };
+
+    transacoes.push(novaTransacao);
+
+  }
+
+  salvar();
+  renderizar();
+
+  form.reset();
+
+});
+
 
   transacoes.push(novaTransacao);
   salvar();
