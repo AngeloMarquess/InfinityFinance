@@ -38,27 +38,15 @@
     </section>
 
     <section class="grafico">
-  <h2>Distribuição por categoria</h2>
-  <canvas id="graficoPizza"></canvas>
-</section>
-
+      <h2>Distribuição por categoria</h2>
+      <canvas id="graficoPizza"></canvas>
+    </section>
 
     <form id="form">
       <input type="text" id="descricao" placeholder="Descrição" required />
       <input type="number" id="valor" placeholder="Valor" step="0.01" required />
 
-      <!-- V8: categoria -->
-      <select id="categoria" required>
-        <option value="Alimentação">Alimentação</option>
-        <option value="Transporte">Transporte</option>
-        <option value="Moradia">Moradia</option>
-        <option value="Saúde">Saúde</option>
-        <option value="Lazer">Lazer</option>
-        <option value="Educação">Educação</option>
-        <option value="Contas">Contas</option>
-        <option value="Investimentos">Investimentos</option>
-        <option value="Outros">Outros</option>
-      </select>
+      <select id="categoria" required></select>
 
       <select id="tipo">
         <option value="receita">Receita</option>
@@ -74,28 +62,26 @@
       <button type="button" class="filtro" data-filtro="despesa">Despesas</button>
     </section>
 
-    <!-- V8: filtro por categoria -->
     <section class="filtro-categoria">
       <label for="filtroCategoria">Categoria:</label>
       <select id="filtroCategoria">
         <option value="todas">Todas</option>
-        <option value="Alimentação">Alimentação</option>
-        <option value="Transporte">Transporte</option>
-        <option value="Moradia">Moradia</option>
-        <option value="Saúde">Saúde</option>
-        <option value="Lazer">Lazer</option>
-        <option value="Educação">Educação</option>
-        <option value="Contas">Contas</option>
-        <option value="Investimentos">Investimentos</option>
-        <option value="Outros">Outros</option>
       </select>
     </section>
 
+    <!-- Criar categoria -->
     <section class="categoria-nova">
-  <input type="text" id="novaCategoria" placeholder="Nova categoria (ex: Pets)" />
-  <button type="button" id="addCategoria">Adicionar categoria</button>
-</section>
+      <input type="text" id="novaCategoria" placeholder="Nova categoria (ex: Pets)" />
+      <button type="button" id="addCategoria">Adicionar categoria</button>
+    </section>
 
+    <!-- V9: Gerenciar categoria (renomear/excluir) -->
+    <section class="categoria-gerenciar">
+      <select id="gerenciarCategoria"></select>
+      <input type="text" id="renomearCategoria" placeholder="Novo nome da categoria" />
+      <button type="button" id="btnRenomearCategoria">Renomear</button>
+      <button type="button" id="btnExcluirCategoria">Excluir</button>
+    </section>
 
     <section class="acoes">
       <button type="button" id="limparTudo" class="danger">Limpar tudo</button>
@@ -113,8 +99,7 @@
     <ul id="lista"></ul>
   </main>
 
-  <!-- Chart.js (apenas 1 vez) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js?v=8"></script>
+  <script src="script.js?v=9"></script>
 </body>
 </html>
