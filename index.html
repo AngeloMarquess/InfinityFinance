@@ -11,67 +11,98 @@
     <h1>InfinityFinance</h1>
 
     <section class="saldo">
-      <h2>Saldo Atual </h2>
+      <h2>Saldo Atual</h2>
       <p id="saldo">R$ 0,00</p>
     </section>
 
     <section class="resumo">
-  <div class="card receita">
-    <p>Receitas</p>
-    <strong id="totalReceitas">R$ 0,00</strong>
-  </div>
+      <div class="card receita">
+        <p>Receitas</p>
+        <strong id="totalReceitas">R$ 0,00</strong>
+      </div>
 
-  <section class="grafico">
-  <h2>Visão Geral</h2>
-<canvas id="graficoFinanceiro"></canvas>
-</section>
+      <div class="card despesa">
+        <p>Despesas</p>
+        <strong id="totalDespesas">R$ 0,00</strong>
+      </div>
+    </section>
 
+    <section class="grafico">
+      <h2>Visão Geral</h2>
+      <canvas id="graficoFinanceiro"></canvas>
+    </section>
 
-  <div class="card despesa">
-    <p>Despesas</p>
-    <strong id="totalDespesas">R$ 0,00</strong>
-  </div>
-</section>
-
+    <section class="grafico">
+      <h2>Por categoria</h2>
+      <canvas id="graficoCategoria"></canvas>
+    </section>
 
     <form id="form">
       <input type="text" id="descricao" placeholder="Descrição" required />
       <input type="number" id="valor" placeholder="Valor" step="0.01" required />
+
+      <!-- V8: categoria -->
+      <select id="categoria" required>
+        <option value="Alimentação">Alimentação</option>
+        <option value="Transporte">Transporte</option>
+        <option value="Moradia">Moradia</option>
+        <option value="Saúde">Saúde</option>
+        <option value="Lazer">Lazer</option>
+        <option value="Educação">Educação</option>
+        <option value="Contas">Contas</option>
+        <option value="Investimentos">Investimentos</option>
+        <option value="Outros">Outros</option>
+      </select>
+
       <select id="tipo">
         <option value="receita">Receita</option>
         <option value="despesa">Despesa</option>
       </select>
+
       <button type="submit">Adicionar</button>
     </form>
 
-<section class="filtros">
-  <button type="button" class="filtro ativo" data-filtro="todas">Todas</button>
-  <button type="button" class="filtro" data-filtro="receita">Receitas</button>
-  <button type="button" class="filtro" data-filtro="despesa">Despesas</button>
-</section>
+    <section class="filtros">
+      <button type="button" class="filtro ativo" data-filtro="todas">Todas</button>
+      <button type="button" class="filtro" data-filtro="receita">Receitas</button>
+      <button type="button" class="filtro" data-filtro="despesa">Despesas</button>
+    </section>
 
-<section class="acoes">
-  <button type="button" id="limparTudo" class="danger">Limpar tudo</button>
-</section>
+    <!-- V8: filtro por categoria -->
+    <section class="filtro-categoria">
+      <label for="filtroCategoria">Categoria:</label>
+      <select id="filtroCategoria">
+        <option value="todas">Todas</option>
+        <option value="Alimentação">Alimentação</option>
+        <option value="Transporte">Transporte</option>
+        <option value="Moradia">Moradia</option>
+        <option value="Saúde">Saúde</option>
+        <option value="Lazer">Lazer</option>
+        <option value="Educação">Educação</option>
+        <option value="Contas">Contas</option>
+        <option value="Investimentos">Investimentos</option>
+        <option value="Outros">Outros</option>
+      </select>
+    </section>
 
-<section class="backup">
-  <button type="button" id="exportar">Exportar backup</button>
+    <section class="acoes">
+      <button type="button" id="limparTudo" class="danger">Limpar tudo</button>
+    </section>
 
-  <label class="importar">
-    Importar backup
-    <input type="file" id="importarArquivo" accept="application/json" hidden />
-  </label>
-</section>
+    <section class="backup">
+      <button type="button" id="exportar">Exportar backup</button>
 
+      <label class="importar">
+        Importar backup
+        <input type="file" id="importarArquivo" accept="application/json" hidden />
+      </label>
+    </section>
 
     <ul id="lista"></ul>
   </main>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <!-- Chart.js (apenas 1 vez) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js?v=6"></script>
-
+  <script src="script.js?v=8"></script>
 </body>
 </html>
-
