@@ -375,6 +375,94 @@ form.addEventListener("submit", (e) => {
 
   }else{
 
+    form.addEventListener("submit", (e) => {
+
+  e.preventDefault();
+
+  const desc = descricao.value.trim();
+  const val = Number(valor.value);
+
+  if (!desc || val <= 0) return;
+
+  if(editandoId){
+
+    const t = transacoes.find(t => t.id === editandoId);
+
+    t.descricao = desc;
+    t.valor = val;
+    t.tipo = tipo.value;
+    t.categoria = categoriaEl.value;
+
+    editandoId = null;
+
+  }else{
+
+    form.addEventListener("submit", (e) => {
+
+  e.preventDefault();
+
+  const desc = descricao.value.trim();
+  const val = Number(valor.value);
+
+  if (!desc || val <= 0) return;
+
+  if(editandoId){
+
+    const t = transacoes.find(t => t.id === editandoId);
+
+    t.descricao = desc;
+    t.valor = val;
+    t.tipo = tipo.value;
+    t.categoria = categoriaEl.value;
+
+    editandoId = null;
+
+  }else{
+
+    form.addEventListener("submit", (e) => {
+
+  e.preventDefault();
+
+  const desc = descricao.value.trim();
+  const val = Number(valor.value);
+
+  if (!desc || val <= 0) return;
+
+  if(editandoId){
+
+    const t = transacoes.find(t => t.id === editandoId);
+
+    t.descricao = desc;
+    t.valor = val;
+    t.tipo = tipo.value;
+    t.categoria = categoriaEl.value;
+
+    editandoId = null;
+
+  }else{
+
+    form.addEventListener("submit", (e) => {
+
+  e.preventDefault();
+
+  const desc = descricao.value.trim();
+  const val = Number(valor.value);
+
+  if (!desc || val <= 0) return;
+
+  if(editandoId){
+
+    const t = transacoes.find(t => t.id === editandoId);
+
+    t.descricao = desc;
+    t.valor = val;
+    t.tipo = tipo.value;
+    t.categoria = categoriaEl.value;
+
+    editandoId = null;
+
+  }else{
+
     const novaTransacao = {
 
       id: Date.now().toString(),
@@ -384,6 +472,54 @@ form.addEventListener("submit", (e) => {
       categoria: categoriaEl.value
 
     };
+
+    transacoes.push(novaTransacao);
+
+  }
+
+  salvar();
+  renderizar();
+
+  form.reset();
+
+});
+
+
+    transacoes.push(novaTransacao);
+
+  }
+
+  salvar();
+  renderizar();
+
+  form.reset();
+
+});
+
+
+    transacoes.push(novaTransacao);
+
+  }
+
+  salvar();
+  renderizar();
+
+  form.reset();
+
+});
+
+
+    transacoes.push(novaTransacao);
+
+  }
+
+  salvar();
+  renderizar();
+
+  form.reset();
+
+});
+
 
     transacoes.push(novaTransacao);
 
