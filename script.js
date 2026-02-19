@@ -22,6 +22,9 @@ const inputImportar = document.getElementById("importarArquivo");
 const ctxGrafico = document.getElementById("graficoFinanceiro");
 const ctxCategoria = document.getElementById("graficoCategoria");
 const ctxPizza = document.getElementById("graficoPizza");
+const novaCategoriaEl = document.getElementById("novaCategoria");
+const addCategoriaBtn = document.getElementById("addCategoria");
+
 
 let graficoPizza;
 
@@ -29,6 +32,21 @@ let graficoPizza;
 // ESTADO
 
 let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
+
+const CATEGORIAS_PADRAO = [
+  "Alimentação",
+  "Transporte",
+  "Moradia",
+  "Saúde",
+  "Lazer",
+  "Educação",
+  "Contas",
+  "Investimentos",
+  "Outros"
+];
+
+let categorias = JSON.parse(localStorage.getItem("categorias")) || CATEGORIAS_PADRAO;
+
 
 let filtroAtual = "todas";
 let categoriaAtual = "todas";
@@ -57,6 +75,45 @@ function salvar(){
   localStorage.setItem("transacoes", JSON.stringify(transacoes));
 
 }
+
+function salvarCategorias(){
+  localStorage.setItem("categorias", JSON.stringify(categorias));
+}
+
+
+function atualizarSelectCategorias(){
+
+  // FORM
+  categoriaEl.innerHTML = "";
+
+  categorias.forEach(cat=>{
+    const opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = cat;
+    categoriaEl.appendChild(opt);
+  });
+
+  // FILTRO
+  const atual = filtroCategoriaEl.value;
+
+  filtroCategoriaEl.innerHTML = `<option value="todas">Todas</option>`;
+
+  categorias.forEach(cat=>{
+    const opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = cat;
+    filtroCategoriaEl.appendChild(opt);
+  });
+
+  // tenta manter seleção anterior
+  if ([...filtroCategoriaEl.options].some(o => o.value === atual)) {
+    filtroCategoriaEl.value = atual;
+  } else {
+    filtroCategoriaEl.value = "todas";
+    categoriaAtual = "todas";
+  }
+}
+
 
 
 function formatarMoeda(valor){
@@ -545,7 +602,43 @@ inputImportar.onchange=async e=>{
 
 };
 
+addCategoriaBtn.addEventListener("click", () => {
+
+  const nome = novaCategoriaEl.value.trim();
+
+  if(!nome) return;
+
+  // impede duplicado (case insensitive)
+  const existe = categorias.some(c => c.toLowerCase() === nome.toLowerCase());
+
+  if(existe){
+    alert("Essa categoria já existe.");
+    return;
+  }
+
+  categorias.push(nome);
+  categorias.sort((a,b) => a.localeCompare(b, "pt-BR"));
+
+  salvarCategorias();
+  atualizarSelectCategorias();
+
+  // seleciona automaticamente no form
+  categoriaEl.value = nome;
+
+  novaCategoriaEl.value = "";
+  novaCategoriaEl.focus();
+
+});
+
+// garante que toda transação tenha categoria existente
+transacoes = transacoes.map(t => ({
+  ...t,
+  categoria: categorias.includes(t.categoria) ? t.categoria : "Outros"
+}));
+
+salvar();
+
 
 // START
-
+atualizarSelectCategorias();
 renderizar();
