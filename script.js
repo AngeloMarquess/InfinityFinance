@@ -1,3 +1,5 @@
+// ELEMENTOS
+
 const form = document.getElementById("form");
 const descricao = document.getElementById("descricao");
 const valor = document.getElementById("valor");
@@ -5,6 +7,7 @@ const tipo = document.getElementById("tipo");
 const categoriaEl = document.getElementById("categoria");
 
 const lista = document.getElementById("lista");
+
 const saldoEl = document.getElementById("saldo");
 const totalReceitasEl = document.getElementById("totalReceitas");
 const totalDespesasEl = document.getElementById("totalDespesas");
@@ -19,177 +22,83 @@ const inputImportar = document.getElementById("importarArquivo");
 const ctxGrafico = document.getElementById("graficoFinanceiro");
 const ctxCategoria = document.getElementById("graficoCategoria");
 
-let grafico;
-let graficoCategoria;
+
+// ESTADO
+
+let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 
 let filtroAtual = "todas";
 let categoriaAtual = "todas";
 
-let transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 let editandoId = null;
 
+let grafico;
+let graficoCategoria;
 
-// MIGRAÇÃO V8: garante categoria e garante valor numérico
-transacoes = transacoes.map((t) => ({
+
+// MIGRAÇÃO
+
+transacoes = transacoes.map(t => ({
   ...t,
   categoria: t.categoria || "Outros",
-  valor: Number(t.valor),
+  valor: Number(t.valor)
 }));
-localStorage.setItem("transacoes", JSON.stringify(transacoes));
 
-function salvar() {
+salvar();
+
+
+// FUNÇÕES
+
+function salvar(){
+
   localStorage.setItem("transacoes", JSON.stringify(transacoes));
+
 }
 
-function formatarMoeda(n) {
-  return Number(n || 0).toLocaleString("pt-BR", {
+
+function formatarMoeda(valor){
+
+  return Number(valor).toLocaleString("pt-BR", {
     style: "currency",
-    currency: "BRL",
+    currency: "BRL"
   });
+
 }
 
-function calcularSaldo(listaTransacoes) {
-  return listaTransacoes.reduce((acc, t) => {
-    const v = Number(t.valor);
-    return t.tipo === "receita" ? acc + v : acc - v;
+
+function calcularSaldo(){
+
+  return transacoes.reduce((acc, t) => {
+
+    return t.tipo === "receita"
+      ? acc + t.valor
+      : acc - t.valor;
+
   }, 0);
+
 }
 
-function removerTransacao(id) {
-  transacoes = transacoes.filter((t) => t.id !== id);
+
+// REMOVER
+
+function removerTransacao(id){
+
+  transacoes = transacoes.filter(t => t.id !== id);
+
   salvar();
+
   renderizar();
-}
-
-function criarItem(transacao) {
-
-  const li = document.createElement("li");
-  li.className = `item ${transacao.tipo}`;
-
-  const info = document.createElement("div");
-  info.className = "info";
-
-  info.innerHTML = `
-    <strong>${transacao.descricao}</strong>
-    <span>${transacao.categoria} • ${formatarMoeda(transacao.valor)}</span>
-  `;
-
-  // botão editar
-  const btnEditar = document.createElement("button");
-  btnEditar.textContent = "✏️";
-  btnEditar.title = "Editar";
-
-  btnEditar.addEventListener("click", () => editarTransacao(transacao.id));
-
-  // botão remover
-  const btnRemover = document.createElement("button");
-  btnRemover.textContent = "🗑";
-  btnRemover.title = "Remover";
-
-  btnRemover.addEventListener("click", () => removerTransacao(transacao.id));
-
-  const actions = document.createElement("div");
-  actions.appendChild(btnEditar);
-  actions.appendChild(btnRemover);
-
-  li.appendChild(info);
-  li.appendChild(actions);
-
-  return li;
 
 }
 
 
-  const btn = document.createElement("button");
-  btn.className = "remover";
-  btn.type = "button";
-  btn.textContent = "🗑";
-  btn.title = "Remover transação";
-  btn.addEventListener("click", () => removerTransacao(transacao.id));
-
-  li.appendChild(info);
-  li.appendChild(btn);
-
-  return li;
-}
-
-function aplicarFiltros(listaTransacoes) {
-  let result = listaTransacoes;
-
-  // filtro por tipo (todas/receita/despesa)
-  if (filtroAtual !== "todas") {
-    result = result.filter((t) => t.tipo === filtroAtual);
-  }
-
-  // filtro por categoria
-  if (categoriaAtual !== "todas") {
-    result = result.filter((t) => (t.categoria || "Outros") === categoriaAtual);
-  }
-
-  return result;
-}
-
-function atualizarGrafico(totalReceitas, totalDespesas) {
-  if (!ctxGrafico) return;
-
-  const dados = [totalReceitas, totalDespesas];
-
-  if (!grafico) {
-    grafico = new Chart(ctxGrafico, {
-      type: "bar",
-      data: {
-        labels: [["Receitas"], ["Despesas"]],
-        datasets: [
-          {
-            label: "R$",
-            data: dados,
-
-            categoryPercentage: 0.6,
-            barPercentage: 0.5,
-            borderRadius: 6,
-
-            backgroundColor: ["#16a34a", "#dc2626"],
-            borderColor: ["#16a34a", "#dc2626"],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { bottom: 20 } },
-        plugins: { legend: { display: false } },
-        scales: {
-          x: {
-            ticks: {
-              autoSkip: false,
-              maxRotation: 0,
-              minRotation: 0,
-              padding: 10,
-            },
-          },
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: (value) =>
-                Number(value).toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                }),
-            },
-          },
-        },
-      },
-    });
-  } else {
-    grafico.data.datasets[0].data = dados;
-    grafico.update();
-  }
-}
+// EDITAR
 
 function editarTransacao(id){
 
   const t = transacoes.find(t => t.id === id);
+
+  if(!t) return;
 
   descricao.value = t.descricao;
   valor.value = t.valor;
@@ -198,286 +107,269 @@ function editarTransacao(id){
 
   editandoId = id;
 
-  descricao.focus();
+}
+
+
+// CRIAR ITEM
+
+function criarItem(t){
+
+  const li = document.createElement("li");
+
+  li.className = `item ${t.tipo}`;
+
+
+  const info = document.createElement("div");
+
+  info.innerHTML = `
+    <strong>${t.descricao}</strong>
+    <span>${t.categoria} • ${formatarMoeda(t.valor)}</span>
+  `;
+
+
+  const btnEditar = document.createElement("button");
+
+  btnEditar.textContent = "✏️";
+
+  btnEditar.onclick = () => editarTransacao(t.id);
+
+
+  const btnRemover = document.createElement("button");
+
+  btnRemover.textContent = "🗑";
+
+  btnRemover.onclick = () => removerTransacao(t.id);
+
+
+  const actions = document.createElement("div");
+
+  actions.appendChild(btnEditar);
+
+  actions.appendChild(btnRemover);
+
+
+  li.appendChild(info);
+
+  li.appendChild(actions);
+
+
+  return li;
 
 }
 
 
-function atualizarGraficoCategoria(listaTransacoes) {
-  if (!ctxCategoria) return;
+// FILTROS
 
-  // soma por categoria (com base na visão atual)
-  const mapa = {};
-  listaTransacoes.forEach((t) => {
-    const cat = t.categoria || "Outros";
-    mapa[cat] = (mapa[cat] || 0) + Number(t.valor);
-  });
+function aplicarFiltros(){
 
-  // ordena por valor desc (mais fintech)
-  const pares = Object.entries(mapa).sort((a, b) => b[1] - a[1]);
-  const labels = pares.map(([k]) => k);
-  const data = pares.map(([, v]) => v);
+  let resultado = transacoes;
 
-  if (!graficoCategoria) {
-    graficoCategoria = new Chart(ctxCategoria, {
-      type: "bar",
-      data: {
-        labels,
-        datasets: [
-          {
-            label: "Total",
-            data,
-            borderWidth: 1,
-            borderRadius: 6,
-            categoryPercentage: 0.7,
-            barPercentage: 0.6,
-          },
-        ],
+  if(filtroAtual !== "todas")
+    resultado = resultado.filter(t => t.tipo === filtroAtual);
+
+  if(categoriaAtual !== "todas")
+    resultado = resultado.filter(t => t.categoria === categoriaAtual);
+
+  return resultado;
+
+}
+
+
+// GRÁFICO GERAL
+
+function atualizarGrafico(){
+
+  const receitas = transacoes
+    .filter(t => t.tipo === "receita")
+    .reduce((a,b)=>a+b.valor,0);
+
+  const despesas = transacoes
+    .filter(t => t.tipo === "despesa")
+    .reduce((a,b)=>a+b.valor,0);
+
+
+  const dados = [receitas, despesas];
+
+
+  if(!grafico){
+
+    grafico = new Chart(ctxGrafico,{
+
+      type:"bar",
+
+      data:{
+
+        labels:[["Receitas"],["Despesas"]],
+
+        datasets:[{
+
+          data:dados,
+
+          backgroundColor:["#16a34a","#dc2626"],
+
+          borderRadius:6
+
+        }]
+
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: {
-            ticks: {
-              autoSkip: false,
-              maxRotation: 0,
-              minRotation: 0,
-            },
-          },
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: (value) =>
-                Number(value).toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                }),
-            },
-          },
-        },
-      },
+
+      options:{ plugins:{legend:{display:false}} }
+
     });
-  } else {
-    graficoCategoria.data.labels = labels;
-    graficoCategoria.data.datasets[0].data = data;
-    graficoCategoria.update();
+
+  }else{
+
+    grafico.data.datasets[0].data = dados;
+
+    grafico.update();
+
   }
+
 }
 
-function exportarBackup() {
-  const payload = {
-    app: "InfinityFinance",
-    version: 2, // V8
-    exportedAt: new Date().toISOString(),
-    transacoes,
-  };
 
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {
-    type: "application/json",
+// GRÁFICO CATEGORIA
+
+function atualizarGraficoCategoria(){
+
+  const lista = aplicarFiltros();
+
+  const mapa = {};
+
+  lista.forEach(t=>{
+
+    mapa[t.categoria] = (mapa[t.categoria]||0) + t.valor;
+
   });
 
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
 
-  const data = new Date().toISOString().slice(0, 10);
-  a.href = url;
-  a.download = `infinityfinance-backup-${data}.json`;
-  a.click();
+  const labels = Object.keys(mapa);
 
-  URL.revokeObjectURL(url);
+  const data = Object.values(mapa);
+
+
+  if(!graficoCategoria){
+
+    graficoCategoria = new Chart(ctxCategoria,{
+
+      type:"bar",
+
+      data:{
+
+        labels,
+
+        datasets:[{
+
+          data,
+
+          borderRadius:6
+
+        }]
+
+      },
+
+      options:{plugins:{legend:{display:false}}}
+
+    });
+
+  }else{
+
+    graficoCategoria.data.labels = labels;
+
+    graficoCategoria.data.datasets[0].data = data;
+
+    graficoCategoria.update();
+
+  }
+
 }
 
-function normalizarTransacoes(arr) {
-  return arr.map((t) => ({
-    id: t.id || (crypto?.randomUUID?.() ?? Date.now().toString()),
-    descricao: String(t.descricao || "").trim(),
-    tipo: t.tipo === "receita" ? "receita" : "despesa",
-    categoria: (t.categoria || "Outros").trim(),
-    valor: Number(t.valor),
-  })).filter((t) => t.descricao && Number.isFinite(t.valor));
+
+// RENDER
+
+function renderizar(){
+
+  lista.innerHTML="";
+
+  aplicarFiltros().forEach(t=>{
+
+    lista.appendChild(criarItem(t));
+
+  });
+
+
+  const receitas = transacoes
+    .filter(t=>t.tipo==="receita")
+    .reduce((a,b)=>a+b.valor,0);
+
+  const despesas = transacoes
+    .filter(t=>t.tipo==="despesa")
+    .reduce((a,b)=>a+b.valor,0);
+
+
+  totalReceitasEl.textContent = formatarMoeda(receitas);
+
+  totalDespesasEl.textContent = formatarMoeda(despesas);
+
+  saldoEl.textContent = formatarMoeda(calcularSaldo());
+
+
+  atualizarGrafico();
+
+  atualizarGraficoCategoria();
+
 }
 
-async function importarBackup(file) {
-  const text = await file.text();
-  const obj = JSON.parse(text);
 
-  // aceita tanto wrapper quanto array puro
-  if (Array.isArray(obj)) {
-    transacoes = normalizarTransacoes(obj);
-  } else if (obj && Array.isArray(obj.transacoes)) {
-    transacoes = normalizarTransacoes(obj.transacoes);
-  } else {
-    throw new Error("Formato inválido");
-  }
+// SUBMIT (CORRIGIDO)
 
-  salvar();
-  renderizar();
-}
-
-function renderizar() {
-  // visão global (totais sempre do app inteiro)
-  const totalReceitas = transacoes
-    .filter((t) => t.tipo === "receita")
-    .reduce((acc, t) => acc + Number(t.valor), 0);
-
-  const totalDespesas = transacoes
-    .filter((t) => t.tipo === "despesa")
-    .reduce((acc, t) => acc + Number(t.valor), 0);
-
-  totalReceitasEl.textContent = formatarMoeda(totalReceitas);
-  totalDespesasEl.textContent = formatarMoeda(totalDespesas);
-
-  const saldo = calcularSaldo(transacoes);
-  saldoEl.textContent = formatarMoeda(saldo);
-
-  // lista + gráfico por categoria seguem filtros
-  const visaoAtual = aplicarFiltros(transacoes);
-
-  lista.innerHTML = "";
-  visaoAtual.forEach((t) => lista.appendChild(criarItem(t)));
-
-  // gráfico geral (visão global do app)
-  atualizarGrafico(totalReceitas, totalDespesas);
-
-  // gráfico por categoria (visão atual)
-  atualizarGraficoCategoria(visaoAtual);
-}
-
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const desc = descricao.value.trim();
-  const val = Number(valor.value);
-
-  if (!desc || !Number.isFinite(val) || val <= 0) return;
-
-  form.addEventListener("submit", (e) => {
+form.addEventListener("submit", function(e){
 
   e.preventDefault();
 
   const desc = descricao.value.trim();
+
   const val = Number(valor.value);
 
-  if (!desc || val <= 0) return;
+  if(!desc || val<=0) return;
 
-  if(editandoId){
 
-    const t = transacoes.find(t => t.id === editandoId);
+  if(editandoId !== null){
 
-    t.descricao = desc;
-    t.valor = val;
-    t.tipo = tipo.value;
-    t.categoria = categoriaEl.value;
+    const t = transacoes.find(t=>t.id===editandoId);
 
-    editandoId = null;
+    if(t){
+
+      t.descricao = desc;
+      t.valor = val;
+      t.tipo = tipo.value;
+      t.categoria = categoriaEl.value;
+
+    }
+
+    editandoId=null;
 
   }else{
 
-    form.addEventListener("submit", (e) => {
+    transacoes.push({
 
-  e.preventDefault();
+      id:Date.now().toString(),
 
-  const desc = descricao.value.trim();
-  const val = Number(valor.value);
+      descricao:desc,
 
-  if (!desc || val <= 0) return;
+      valor:val,
 
-  if(editandoId){
+      tipo:tipo.value,
 
-    const t = transacoes.find(t => t.id === editandoId);
+      categoria:categoriaEl.value
 
-    t.descricao = desc;
-    t.valor = val;
-    t.tipo = tipo.value;
-    t.categoria = categoriaEl.value;
-
-    editandoId = null;
-
-  }else{
-
-    form.addEventListener("submit", (e) => {
-
-  e.preventDefault();
-
-  const desc = descricao.value.trim();
-  const val = Number(valor.value);
-
-  if (!desc || val <= 0) return;
-
-  if(editandoId){
-
-    const t = transacoes.find(t => t.id === editandoId);
-
-    t.descricao = desc;
-    t.valor = val;
-    t.tipo = tipo.value;
-    t.categoria = categoriaEl.value;
-
-    editandoId = null;
-
-  }else{
-
-    form.addEventListener("submit", (e) => {
-
-  e.preventDefault();
-
-  const desc = descricao.value.trim();
-  const val = Number(valor.value);
-
-  if (!desc || val <= 0) return;
-
-  if(editandoId){
-
-    const t = transacoes.find(t => t.id === editandoId);
-
-    t.descricao = desc;
-    t.valor = val;
-    t.tipo = tipo.value;
-    t.categoria = categoriaEl.value;
-
-    editandoId = null;
-
-  }else{
-
-    form.addEventListener("submit", (e) => {
-
-  e.preventDefault();
-
-  const desc = descricao.value.trim();
-  const val = Number(valor.value);
-
-  if (!desc || val <= 0) return;
-
-  if(editandoId){
-
-    const t = transacoes.find(t => t.id === editandoId);
-
-    t.descricao = desc;
-    t.valor = val;
-    t.tipo = tipo.value;
-    t.categoria = categoriaEl.value;
-
-    editandoId = null;
-
-  }else{
-
-    const novaTransacao = {
-
-      id: Date.now().toString(),
-      descricao: desc,
-      valor: val,
-      tipo: tipo.value,
-      categoria: categoriaEl.value
-
-    };
-
-    transacoes.push(novaTransacao);
+    });
 
   }
 
+
   salvar();
+
   renderizar();
 
   form.reset();
@@ -485,118 +377,88 @@ form.addEventListener("submit", (e) => {
 });
 
 
-    transacoes.push(novaTransacao);
+// FILTROS EVENTOS
 
-  }
+botoesFiltro.forEach(btn=>{
 
-  salvar();
-  renderizar();
+  btn.onclick=()=>{
 
-  form.reset();
+    filtroAtual=btn.dataset.filtro;
 
-});
+    botoesFiltro.forEach(b=>b.classList.remove("ativo"));
 
-
-    transacoes.push(novaTransacao);
-
-  }
-
-  salvar();
-  renderizar();
-
-  form.reset();
-
-});
-
-
-    transacoes.push(novaTransacao);
-
-  }
-
-  salvar();
-  renderizar();
-
-  form.reset();
-
-});
-
-
-    transacoes.push(novaTransacao);
-
-  }
-
-  salvar();
-  renderizar();
-
-  form.reset();
-
-});
-
-
-  transacoes.push(novaTransacao);
-  salvar();
-  renderizar();
-  form.reset();
-  descricao.focus();
-});
-
-botoesFiltro.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    filtroAtual = btn.dataset.filtro;
-
-    botoesFiltro.forEach((b) => b.classList.remove("ativo"));
     btn.classList.add("ativo");
 
     renderizar();
-  });
+
+  };
+
 });
 
-filtroCategoriaEl.addEventListener("change", () => {
-  categoriaAtual = filtroCategoriaEl.value;
+
+filtroCategoriaEl.onchange=()=>{
+
+  categoriaAtual=filtroCategoriaEl.value;
+
   renderizar();
-});
 
-btnLimparTudo.addEventListener("click", () => {
-  if (transacoes.length === 0) return;
+};
 
-  const ok = confirm(
-    "Tem certeza que deseja apagar todas as transações? Isso não pode ser desfeito."
+
+// LIMPAR
+
+btnLimparTudo.onclick=()=>{
+
+  if(confirm("Apagar tudo?")){
+
+    transacoes=[];
+
+    salvar();
+
+    renderizar();
+
+  }
+
+};
+
+
+// BACKUP
+
+btnExportar.onclick=()=>{
+
+  const blob=new Blob(
+    [JSON.stringify(transacoes,null,2)],
+    {type:"application/json"}
   );
-  if (!ok) return;
 
-  transacoes = [];
+  const a=document.createElement("a");
+
+  a.href=URL.createObjectURL(blob);
+
+  a.download="backup.json";
+
+  a.click();
+
+};
+
+
+inputImportar.onchange=async e=>{
+
+  const file=e.target.files[0];
+
+  if(!file) return;
+
+  const text=await file.text();
+
+  transacoes=JSON.parse(text);
+
   salvar();
+
   renderizar();
-});
 
-btnExportar.addEventListener("click", () => {
-  if (transacoes.length === 0) {
-    alert("Não há transações para exportar.");
-    return;
-  }
-  exportarBackup();
-});
+};
 
-inputImportar.addEventListener("change", async (e) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
 
-  const ok = confirm(
-    "Importar este backup vai substituir suas transações atuais. Continuar?"
-  );
-  if (!ok) {
-    e.target.value = "";
-    return;
-  }
-
-  try {
-    await importarBackup(file);
-    alert("Backup importado com sucesso!");
-  } catch {
-    alert("Não foi possível importar. Verifique se o arquivo é um JSON válido.");
-  } finally {
-    e.target.value = "";
-  }
-});
+// START
 
 renderizar();
