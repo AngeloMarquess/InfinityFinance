@@ -392,21 +392,24 @@ export default function DashboardScreen() {
 
         {/* ROW 5 Blog Placeholder */}
         <View className="mt-8 mb-4 w-full md:w-1/2">
-           <View className="flex-row items-center justify-between mb-4">
-             <Text className="text-gray-800 dark:text-gray-200 font-bold">Conteúdos do blog</Text>
-             <Pressable onPress={() => setIsBlogExpanded(!isBlogExpanded)} className="w-7 h-7 rounded-full bg-gray-100 dark:bg-zinc-800 items-center justify-center hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors">
-                <SymbolView name={{ ios: isBlogExpanded ? 'arrowtriangle.up.fill' : 'arrowtriangle.down.fill', android: isBlogExpanded ? 'arrow_drop_up' : 'arrow_drop_down', web: isBlogExpanded ? 'arrow_drop_up' : 'arrow_drop_down' }} tintColor="#6b7280" size={16} />
-             </Pressable>
-           </View>
-           {isBlogExpanded && (
-             <View className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 p-4 w-full flex-row gap-4">
-               <View className="w-24 h-24 bg-gray-200 dark:bg-zinc-800 rounded-lg" />
-               <View className="flex-1 justify-center">
-                 <Text className="text-gray-900 dark:text-white font-bold text-sm leading-relaxed">Imposto de Renda 2026: Guia completo para declarar sem erros</Text>
-                 <Text className="text-[#24c45c] text-xs font-bold mt-2">Ler artigo</Text>
-               </View>
+           <View className={`bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 p-6 relative ${isBlogExpanded ? '' : 'h-[72px] overflow-hidden'}`}>
+             <View className="flex-row items-center justify-between mb-auto relative">
+               <Text className="text-gray-800 dark:text-gray-200 font-bold">Conteúdos do blog</Text>
+               <Pressable onPress={() => setIsBlogExpanded(!isBlogExpanded)} className="w-7 h-7 rounded-full bg-gray-100 dark:bg-zinc-800 items-center justify-center hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors absolute right-0 top-0">
+                  <SymbolView name={{ ios: isBlogExpanded ? 'arrowtriangle.up.fill' : 'arrowtriangle.down.fill', android: isBlogExpanded ? 'arrow_drop_up' : 'arrow_drop_down', web: isBlogExpanded ? 'arrow_drop_up' : 'arrow_drop_down' }} tintColor="#6b7280" size={16} />
+               </Pressable>
              </View>
-           )}
+
+             {isBlogExpanded && (
+               <View className="w-full flex-row gap-4 mt-6 pointer-events-none">
+                 <View className="w-24 h-24 bg-gray-200 dark:bg-zinc-800 rounded-lg" />
+                 <View className="flex-1 justify-center">
+                   <Text className="text-gray-900 dark:text-white font-bold text-sm leading-relaxed">Imposto de Renda 2026: Guia completo para declarar sem erros</Text>
+                   <Text className="text-[#24c45c] text-xs font-bold mt-2">Ler artigo</Text>
+                 </View>
+               </View>
+             )}
+           </View>
         </View>
 
         {/* Floating Help Button Mimic (Web Only) */}
